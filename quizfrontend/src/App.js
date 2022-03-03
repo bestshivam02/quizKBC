@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import { useTimer } from "react-timer-hook";
-import {data as maindata} from './data';
 import './App.css';
+import Weather from './weather';
 
 // const data = null
 
@@ -13,7 +13,7 @@ const expiryTimestamp = time.setSeconds(time.getSeconds() + timeinSeconds);
 function App() {
 
   const [data, setdata] = useState(null)
-  const [weather, setweather] = useState(null)
+
 
   const [initialState, setInitialState] = useState({});
   const [status, setStatus] = useState(initialState.status);
@@ -123,13 +123,13 @@ function App() {
       setFinalResult(values => ({ ...values, ["answered"]: finalResult.answered + 1}))
       setFinalResult(values => ({ ...values, ["answers"]: [...finalResult.answers, selectedAnswer] }))
       setFinalResult(values => ({ ...values, ["totalRupees"]: 
-      finalResult.answered == 0 ? 1000 :  
-      finalResult.answered == 1 ? 2000 :
-      finalResult.answered == 2 ? 10000 :
-      finalResult.answered == 3 ? 15000 :
-      finalResult.answered == 4 ? 50000 :
-      finalResult.answered == 5 ? 500000 : 
-      finalResult.answered == 6 ? 700000 : 0
+      finalResult.answered === 0 ? 1000 :  
+      finalResult.answered === 1 ? 2000 :
+      finalResult.answered === 2 ? 10000 :
+      finalResult.answered === 3 ? 15000 :
+      finalResult.answered === 4 ? 50000 :
+      finalResult.answered === 5 ? 500000 : 
+      finalResult.answered === 6 ? 700000 : 80000
     }))
 
       // console.log(selectedAnswer);
@@ -172,21 +172,12 @@ function App() {
         console.log(maindata)
       })
 
-      fetch("http://127.0.0.1:8000/api/get-game/")
-      .then(response => {
-        return response.json()
-      })
-      .then(wdata => {
-        setweather(wdata)
-        console.log(wdata)
-      })
-
   },[])
 
   return (
     <div className="App">
       {/* {console.log(questionsData)} */}
-      
+    <Weather/>
       {status? 
         <>
         {/* <div>{weather.games && weather.games.questions.map(question=><span>{question}</span>)}</div> */}
@@ -201,8 +192,10 @@ function App() {
         
       
         <button className='btn btn-info m-5' onClick={handleNextQuestion}>next Question</button>
-        <button className='btn btn-info m-5' onClick={handlePrevQuestion}>Prev Question</button>
+        {/* <button className='btn btn-info m-5' onClick={handlePrevQuestion}>Prev Question</button> */}
         <button className='btn btn-warning m-5' onClick={handleFifty}>50/50</button>
+        <a href='tel:+917503414339' className='btn btn-warning m-5' >Phone a Friend</a>
+
 
       <div style={{ fontSize: "100px" }}>
         <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
@@ -226,6 +219,15 @@ function App() {
         <>
         <h4>Game Over</h4>  
         <h5>The Correct Answer is: <b id="answerId"></b> {correctAnswer && correctAnswer[0].answer}</h5>
+        <h3>Your Score is {finalResult && finalResult.totalRupees} </h3>
+
+        <h2>You have given {finalResult && finalResult.answered} correct answers</h2>
+        
+        {/* {allAnswers.map((perAnswer)=> 
+        <div>
+          <li>{perAnswer[0]}</li>
+        </div>
+        )} */}
 
         <button onClick={handleReplay}>Replay</button>
         </>
